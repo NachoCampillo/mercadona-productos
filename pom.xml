@@ -13,7 +13,7 @@
 
     <!-- Configuración de la versión de Java -->
     <properties>
-        <java.version>11</java.version> <!-- Puedes usar 17 si prefieres -->
+        <java.version>17</java.version> <!-- Puedes usar 17 si prefieres -->
     </properties>
 
     <parent>
@@ -24,52 +24,41 @@
     </parent>
 
     <dependencies>
-        <!-- Dependencia para JUnit (test) -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Dependencia para Spring Web (crear API REST) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <!-- Dependencia para H2 (base de datos en memoria) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- Dependencia para JPA (persistencia de datos) -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <!-- Lombok (para simplificar código con getters, setters, etc.) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>1.18.24</version> 
             <scope>provided</scope>
         </dependency>
-
-        <!-- Dependencia de Spring Boot Test (para pruebas unitarias) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
-        <!-- JWT (opcional si planeas hacer autenticación) -->
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.6.0</version> <!-- O la última versión disponible -->
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     </dependencies>
 

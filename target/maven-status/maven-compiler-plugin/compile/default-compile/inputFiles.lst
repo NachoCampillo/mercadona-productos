@@ -1,0 +1,7 @@
+/home/runner/mercadona/src/main/java/com/mercadona/demo/repository/ProductoRepository.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/service/ProductoServiceImpl.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/Main.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/service/ProductoService.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/controller/ProductoController.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/security/SecurityConfig.java
+/home/runner/mercadona/src/main/java/com/mercadona/demo/model/Producto.java
