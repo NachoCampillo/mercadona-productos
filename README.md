@@ -80,7 +80,7 @@ Response (201 Created):
   "destino": "Tiendas Mercadona España"
 }
 
-Get para obtener producto por EAN GET /api/productos/{ean}
+3. Get para obtener producto por EAN GET /api/productos/{ean}
 GET /api/productos/8437008459059 Response (200 OK):
 {
   "id": 1,
@@ -90,7 +90,7 @@ GET /api/productos/8437008459059 Response (200 OK):
   "destino": "Tiendas Mercadona España"
 }
 
-Actualizar Producto (PUT /api/productos/{id})
+4. Actualizar Producto (PUT /api/productos/{id})
 Debes proporcionar el ID del producto en la URL. Request Body:
 {
   "ean": "8437008459059"
@@ -104,7 +104,7 @@ Response (200 OK):
   "destino": "Tiendas Mercadona España"
 }
 
-Eliminar Producto (DELETE /api/productos/{id})
+5. Eliminar Producto (DELETE /api/productos/{id})
 DELETE /api/productos/1 Response (200 OK):
 
 Obtener Todos los Productos (GET /api/productos/all)
