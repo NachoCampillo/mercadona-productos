@@ -2,8 +2,10 @@ package com.mercadona.demo.service;
 
 import com.mercadona.demo.model.Producto;
 import com.mercadona.demo.repository.ProductoRepository;
+import com.mercadona.demo.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,14 +30,82 @@ public class ProductoServiceImpl implements ProductoService {
         // Buscar el producto en la base de datos
         Optional<Producto> producto = productoRepository.findByEan(ean);
 
-        if (producto.isPresent()) {
-            Producto p = producto.get();
-            p.setDestino(destino);
-            p.setCodigoProducto(segundaParte);
-            p.setProveedor(determinarProveedor(primeraParte));
+        if (!producto.isPresent()) {
+            throw new EntityNotFoundException("Producto con EAN " + ean + " no encontrado.");
         }
 
+        // Si se encuentra el producto, actualiza los campos derivados
+        Producto p = producto.get();
+        p.setDestino(destino);
+        p.setCodigoProducto(segundaParte);
+        p.setProveedor(determinarProveedor(primeraParte));
+
         return producto;
+    }
+
+    @Override
+    public Producto guardarProducto(Producto producto) {
+        // Validar EAN
+        validarEan(producto.getEan());
+
+        // Derivar proveedor, código de producto y destino antes de guardar
+        String destino = determinarDestino(producto.getEan());
+        String codigoProducto = producto.getEan().substring(7, 12);
+        String proveedor = determinarProveedor(producto.getEan().substring(0, 7));
+
+        producto.setCodigoProducto(codigoProducto);
+        producto.setDestino(destino);
+        producto.setProveedor(proveedor);
+
+        try {
+            return productoRepository.save(producto); // Guardar producto con datos completos
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el producto: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Producto actualizarProducto(Producto producto) {
+        // Verificar que el producto existe antes de actualizar
+        Optional<Producto> productoExistente = productoRepository.findById(producto.getId());
+        if (productoExistente.isPresent()) {
+            // Recalcular proveedor, código de producto y destino si se actualiza el EAN
+            validarEan(producto.getEan());
+
+            producto.setCodigoProducto(producto.getEan().substring(7, 12));
+            producto.setDestino(determinarDestino(producto.getEan()));
+            producto.setProveedor(determinarProveedor(producto.getEan().substring(0, 7)));
+
+            try {
+                return productoRepository.save(producto);  // Guardar la actualización
+            } catch (Exception e) {
+                throw new RuntimeException("Error al actualizar el producto: " + e.getMessage(), e);
+            }
+        } else {
+            throw new EntityNotFoundException("Producto con ID " + producto.getId() + " no encontrado.");
+        }
+    }
+
+    @Override
+    public void eliminarProducto(Long id) {
+        if (productoRepository.existsById(id)) {
+            try {
+                productoRepository.deleteById(id); // Eliminar producto
+            } catch (Exception e) {
+                throw new RuntimeException("Error al eliminar el producto con ID " + id + ": " + e.getMessage(), e);
+            }
+        } else {
+            throw new EntityNotFoundException("Producto con ID " + id + " no encontrado.");
+        }
+    }
+
+    @Override
+    public List<Producto> obtenerProductos() {
+        try {
+            return productoRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener la lista de productos: " + e.getMessage(), e);
+        }
     }
 
     private void validarEan(String ean) {
@@ -68,54 +138,5 @@ public class ProductoServiceImpl implements ProductoService {
         }
 
         return "Proveedor Desconocido";
-    }
-
-    @Override
-    public Producto guardarProducto(Producto producto) {
-        // Validar EAN
-        validarEan(producto.getEan());
-
-        // Derivar proveedor, código de producto y destino antes de guardar
-        String destino = determinarDestino(producto.getEan());
-        String codigoProducto = producto.getEan().substring(7, 12);
-        String proveedor = determinarProveedor(producto.getEan().substring(0, 7));
-
-        producto.setCodigoProducto(codigoProducto);
-        producto.setDestino(destino);
-        producto.setProveedor(proveedor);
-
-        return productoRepository.save(producto); // Guardar producto con datos completos
-    }
-
-    @Override
-    public Producto actualizarProducto(Producto producto) {
-        // Verificar que el producto existe antes de actualizar
-        Optional<Producto> productoExistente = productoRepository.findById(producto.getId());
-        if (productoExistente.isPresent()) {
-            // Recalcular proveedor, código de producto y destino si se actualiza el EAN
-            validarEan(producto.getEan());
-
-            producto.setCodigoProducto(producto.getEan().substring(7, 12));
-            producto.setDestino(determinarDestino(producto.getEan()));
-            producto.setProveedor(determinarProveedor(producto.getEan().substring(0, 7)));
-
-            return productoRepository.save(producto);  // Guardar la actualización
-        } else {
-            throw new IllegalArgumentException("Producto no encontrado.");
-        }
-    }
-
-    @Override
-    public void eliminarProducto(Long id) {
-        if (productoRepository.existsById(id)) {
-            productoRepository.deleteById(id); // Eliminar producto
-        } else {
-            throw new IllegalArgumentException("Producto no encontrado.");
-        }
-    }
-
-    @Override
-    public List<Producto> obtenerProductos() {
-        return productoRepository.findAll();
     }
 }
