@@ -43,7 +43,7 @@ Instalación:
 
 Clonar el repositorio:
 Copiar código
-git clone https://github.com/MercadonaITSeleccion/Ignacio_Campillo.git
+git clone https://github.com/NachoCampillo/mercadona-productos.git
 cd mercadona
 
 Compilar y ejecutar el proyecto:
