@@ -5,7 +5,7 @@ import com.mercadona.demo.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -43,4 +43,9 @@ import java.util.Optional;
     return ResponseEntity.ok().build();
   }
 
+    @GetMapping("/all")
+  public ResponseEntity<List<Producto>> obtenerProductos(){
+    
+    return ResponseEntity.ok(productoService.obtenerProductos());
+  }
   }

@@ -12,19 +12,18 @@ public class Producto {
   private Long id; // Clave primaria autoincremental
 
   @NotBlank(message = "El código EAN no puede estar en blanco.")
-  @Size(min = 13, max = 13, message = "El código EAN debe tener exactamente 13 caracteres.")
-  @Column(unique = true) // El EAN sigue siendo único
-  private String ean;
+    @Size(min = 13, max = 13, message = "El código EAN debe tener exactamente 13 caracteres.")
+    @Pattern(regexp = "\\d+", message = "El código EAN solo puede contener números.")
+    @Column(unique = true)
+    private String ean;
 
-  @NotBlank(message = "El nombre del proveedor no puede estar en blanco.")
+    // Estas propiedades ya no necesitan ser obligatorias, se derivarán del EAN
   @Column(nullable = false)
-  private String proveedor;
-
-  @NotBlank(message = "El código de producto no puede estar en blanco.")
+    private String proveedor;
+  
   @Column(nullable = false)
-  private String codigoProducto;
-
-  @NotBlank(message = "El destino no puede estar en blanco.")
+    private String codigoProducto;
+  
   @Column(nullable = false)
-  private String destino;
+    private String destino;
 }

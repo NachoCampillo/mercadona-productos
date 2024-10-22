@@ -2,7 +2,7 @@ package com.mercadona.demo.service;
 
 import com.mercadona.demo.model.Producto;
 import java.util.Optional;
-
+import java.util.List;
 public interface ProductoService {
 
     // Obtener un producto por su EAN
@@ -16,4 +16,6 @@ public interface ProductoService {
 
     // Eliminar un producto por su ID
     void eliminarProducto(Long id);
+
+    List<Producto> obtenerProductos();
 }

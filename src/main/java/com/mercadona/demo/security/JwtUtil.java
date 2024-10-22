@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtUtil {  // Cambié el nombre a JwtUtil, que es más coherente con el propósito de la clase
+public class JwtUtil {  
     private String SECRET_KEY = "my_secret_key"; 
 
     public String extractUsername(String token) {
@@ -41,7 +41,7 @@ public class JwtUtil {  // Cambié el nombre a JwtUtil, que es más coherente co
         return createToken(claims, username);
     }
 
-    // Método corregido: añadí la llave de cierre que faltaba
+    
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
