@@ -1,7 +1,12 @@
-com/mercadona/demo/security/SecurityConfig.class
-com/mercadona/demo/controller/ProductoController.class
-com/mercadona/demo/repository/ProductoRepository.class
+com/mercadona/demo/security/JwtRequestFilter.class
+com/mercadona/demo/controller/AuthRequest.class
 com/mercadona/demo/service/ProductoServiceImpl.class
+com/mercadona/demo/security/CustomUserDetailsService.class
 com/mercadona/demo/Main.class
 com/mercadona/demo/model/Producto.class
+com/mercadona/demo/controller/ProductoController.class
+com/mercadona/demo/repository/ProductoRepository.class
+com/mercadona/demo/controller/AuthController.class
 com/mercadona/demo/service/ProductoService.class
+com/mercadona/demo/config/SecurityConfig.class
+com/mercadona/demo/security/JwtUtil.class
