@@ -6,6 +6,7 @@ com/mercadona/demo/security/CustomUserDetailsService.class
 com/mercadona/demo/service/ProductoServiceImpl.class
 com/mercadona/demo/Main.class
 com/mercadona/demo/model/Producto.class
+com/mercadona/demo/config/CacheConfig.class
 com/mercadona/demo/controller/ProductoController.class
 com/mercadona/demo/repository/ProductoRepository.class
 com/mercadona/demo/controller/AuthController.class

@@ -16,6 +16,6 @@ public interface ProductoService {
 
     // Eliminar un producto por su ID
     void eliminarProducto(Long id);
-
+     // Obtiene todos los productos
     List<Producto> obtenerProductos();
 }

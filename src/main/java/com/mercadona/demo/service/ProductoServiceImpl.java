@@ -5,6 +5,9 @@ import com.mercadona.demo.repository.ProductoRepository;
 import com.mercadona.demo.exception.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,25 +19,18 @@ public class ProductoServiceImpl implements ProductoService {
     private ProductoRepository productoRepository;
 
     @Override
+    @Cacheable(value="productos", key="#ean")
     public Optional<Producto> obtenerProductoPorEan(String ean) {
-        // Validar EAN numérico y longitud
         validarEan(ean);
-
-        // Determinar destino del producto
         String destino = determinarDestino(ean);
-
-        // Obtener la segunda parte del EAN para código de producto y proveedor
         String segundaParte = ean.substring(7, 12);
         String primeraParte = ean.substring(0, 7);
-
-        // Buscar el producto en la base de datos
         Optional<Producto> producto = productoRepository.findByEan(ean);
 
         if (!producto.isPresent()) {
             throw new EntityNotFoundException("Producto con EAN " + ean + " no encontrado.");
         }
 
-        // Si se encuentra el producto, actualiza los campos derivados
         Producto p = producto.get();
         p.setDestino(destino);
         p.setCodigoProducto(segundaParte);
@@ -45,39 +41,33 @@ public class ProductoServiceImpl implements ProductoService {
 
     @Override
     public Producto guardarProducto(Producto producto) {
-        // Validar EAN
         validarEan(producto.getEan());
-
-        // Derivar proveedor, código de producto y destino antes de guardar
         String destino = determinarDestino(producto.getEan());
         String codigoProducto = producto.getEan().substring(7, 12);
         String proveedor = determinarProveedor(producto.getEan().substring(0, 7));
-
         producto.setCodigoProducto(codigoProducto);
         producto.setDestino(destino);
         producto.setProveedor(proveedor);
 
         try {
-            return productoRepository.save(producto); // Guardar producto con datos completos
+            return productoRepository.save(producto);
         } catch (Exception e) {
             throw new RuntimeException("Error al guardar el producto: " + e.getMessage(), e);
         }
     }
 
     @Override
+    @CacheEvict(value = "productos",  allEntries = true)
     public Producto actualizarProducto(Producto producto) {
-        // Verificar que el producto existe antes de actualizar
         Optional<Producto> productoExistente = productoRepository.findById(producto.getId());
         if (productoExistente.isPresent()) {
-            // Recalcular proveedor, código de producto y destino si se actualiza el EAN
             validarEan(producto.getEan());
-
             producto.setCodigoProducto(producto.getEan().substring(7, 12));
             producto.setDestino(determinarDestino(producto.getEan()));
             producto.setProveedor(determinarProveedor(producto.getEan().substring(0, 7)));
 
             try {
-                return productoRepository.save(producto);  // Guardar la actualización
+                return productoRepository.save(producto);
             } catch (Exception e) {
                 throw new RuntimeException("Error al actualizar el producto: " + e.getMessage(), e);
             }
@@ -87,10 +77,11 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @CacheEvict(value = "productos",  allEntries = true)  
     public void eliminarProducto(Long id) {
         if (productoRepository.existsById(id)) {
             try {
-                productoRepository.deleteById(id); // Eliminar producto
+                productoRepository.deleteById(id);
             } catch (Exception e) {
                 throw new RuntimeException("Error al eliminar el producto con ID " + id + ": " + e.getMessage(), e);
             }
@@ -100,6 +91,7 @@ public class ProductoServiceImpl implements ProductoService {
     }
 
     @Override
+    @Cacheable(value = "productos")  
     public List<Producto> obtenerProductos() {
         try {
             return productoRepository.findAll();
@@ -112,7 +104,6 @@ public class ProductoServiceImpl implements ProductoService {
         if (!ean.matches("\\d+")) {
             throw new IllegalArgumentException("El EAN debe contener solo números.");
         }
-
         if (ean.length() != 13) {
             throw new IllegalArgumentException("El EAN debe tener 13 dígitos.");
         }
@@ -136,7 +127,6 @@ public class ProductoServiceImpl implements ProductoService {
         if ("8437008".equals(primeraParte)) {
             return "Hacendado";
         }
-
         return "Proveedor Desconocido";
     }
 }

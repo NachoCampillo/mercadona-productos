@@ -1,5 +1,6 @@
 package com.mercadona.demo.controller;
 
+import org.springframework.http.HttpStatus;
 import com.mercadona.demo.model.Producto;
 import com.mercadona.demo.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +29,15 @@ import java.util.Optional;
   @PostMapping
   public ResponseEntity<Producto> guardarProducto(@Valid @RequestBody Producto producto) {
     Producto productoGuardado = productoService.guardarProducto(producto);
-    return ResponseEntity.ok(productoGuardado);
+    return ResponseEntity.status(HttpStatus.CREATED).body(productoGuardado); 
   }
 
-  @PutMapping
-  public ResponseEntity<Producto> actualizarProducto(@Valid @RequestBody Producto producto) {
-    Producto productoActualizado = productoService.actualizarProducto(producto);
-    return ResponseEntity.ok(productoActualizado);
-  }
+    @PutMapping("/{id}")
+      public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+          producto.setId(id);  // Asegura que el ID se establece correctamente
+          Producto productoActualizado = productoService.actualizarProducto(producto);
+          return ResponseEntity.ok(productoActualizado);  // Devuelve 200 OK
+      }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Producto> eliminarProducto(@PathVariable("id") Long id) {
@@ -45,7 +47,7 @@ import java.util.Optional;
 
     @GetMapping("/all")
   public ResponseEntity<List<Producto>> obtenerProductos(){
-    
-    return ResponseEntity.ok(productoService.obtenerProductos());
+    List<Producto> productos = productoService.obtenerProductos();
+    return ResponseEntity.ok(productos);
   }
   }
